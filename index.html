@@ -1,1 +1,182 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Simple Clock</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background: #111827;
+  --card: #1f2937;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #818cf8;
+}
+
+body.light {
+  --background: #f1f5f9;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #64748b;
+  --accent: #4f46e5;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) 20px
+           env(safe-area-inset-bottom);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
+  transition: background .25s, color .25s;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.card {
+  background: var(--card);
+  padding: 42px 20px;
+  border-radius: 28px;
+  box-shadow: 0 15px 45px rgba(0,0,0,.15);
+}
+
+.label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+#clock {
+  margin: 30px 0 12px;
+  font-size: clamp(48px, 14vw, 76px);
+  font-weight: 700;
+  letter-spacing: -4px;
+  font-variant-numeric: tabular-nums;
+}
+
+#date {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 13px 18px;
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+  <section class="card">
+
+    <div class="label">SIMPLE CLOCK</div>
+
+    <div id="clock">00:00:00</div>
+
+    <div id="date">Loading...</div>
+
+    <div class="controls">
+      <button id="format">12 / 24 Hour</button>
+      <button id="theme">Light Mode</button>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    Simple Clock · Version 1.0
+  </div>
+</main>
+
+<script>
+let use24Hour = false;
+
+const clock = document.getElementById("clock");
+const date = document.getElementById("date");
+const formatButton = document.getElementById("format");
+const themeButton = document.getElementById("theme");
+
+function updateClock() {
+  const now = new Date();
+
+  clock.textContent = now.toLocaleTimeString(
+    undefined,
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: !use24Hour
+    }
+  );
+
+  date.textContent = now.toLocaleDateString(
+    undefined,
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }
+  );
+}
+
+formatButton.addEventListener("click", () => {
+  use24Hour = !use24Hour;
+  updateClock();
+});
+
+themeButton.addEventListener("click", () => {
+  document.body.classList.toggle("light");
+
+  themeButton.textContent =
+    document.body.classList.contains("light")
+      ? "Dark Mode"
+      : "Light Mode";
+});
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
+
